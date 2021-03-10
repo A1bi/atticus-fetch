@@ -18,5 +18,9 @@ end
 logger.info("Found #{episodes.count} new episodes.")
 
 episodes.map do |episode|
-  logger.info("Found episode '#{episode['shortTitle']}'.")
+  logger.info("Downloading episode '#{episode['shortTitle']}'...")
+
+  ArdFetcher.download_episode(episode['id']) do |fragment|
+    puts fragment.code
+  end
 end
