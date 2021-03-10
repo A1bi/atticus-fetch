@@ -4,4 +4,6 @@ source 'https://rubygems.org'
 
 gem 'byebug'
 gem 'dotenv'
+gem 'httparty'
+gem 'logger'
 gem 'rubocop'
