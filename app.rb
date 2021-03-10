@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require 'i18n'
 require 'logger'
 require './lib/ard_fetcher'
 require './lib/emby'
 
 logger = Logger.new($stdout)
+
+I18n.load_path << Dir["#{File.expand_path('locales')}/*.yml"]
+I18n.locale = :de
 
 last_date = Time.new('2021-01-01')
 
