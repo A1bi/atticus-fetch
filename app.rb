@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'dotenv/load'
 require 'i18n'
 require 'logger'
 require './lib/ard_fetcher'
@@ -20,6 +21,11 @@ if episodes.nil?
   exit 0
 end
 
+if episodes.none?
+  logger.info('No new episodes available.')
+  exit 0
+end
+
 logger.info("Found #{episodes.count} new episodes.")
 
 episodes.map do |episode|
@@ -33,3 +39,5 @@ episodes.map do |episode|
     end
   end
 end
+
+Emby.refresh_library(ENV['EMBY_ITEM_ID'])
