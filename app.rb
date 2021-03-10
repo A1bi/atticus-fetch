@@ -2,6 +2,7 @@
 
 require 'logger'
 require './lib/ard_fetcher'
+require './lib/emby'
 
 logger = Logger.new($stdout)
 
@@ -20,7 +21,11 @@ logger.info("Found #{episodes.count} new episodes.")
 episodes.map do |episode|
   logger.info("Downloading episode '#{episode['shortTitle']}'...")
 
-  ArdFetcher.download_episode(episode['id']) do |fragment|
-    puts fragment.code
+  Emby.store_episode(base_path: '.', date: episode['broadcastedOn']) do |file|
+    ArdFetcher.download_episode(episode['id']) do |fragment, progress|
+      file.write(fragment)
+
+      printf "\rDownloaded #{(progress * 100).floor} %%..."
+    end
   end
 end

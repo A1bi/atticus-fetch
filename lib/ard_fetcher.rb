@@ -14,8 +14,10 @@ class ArdFetcher
       return unless response.success?
 
       response.parsed_response['teasers'].filter do |teaser|
-        (!min_duration || teaser['duration'] >= min_duration) &&
-          (!after_date || Time.new(teaser['broadcastedOn']) >= after_date)
+        next if min_duration && teaser['duration'] < min_duration
+
+        teaser['broadcastedOn'] = Time.parse(teaser['broadcastedOn'])
+        !after_date || teaser['broadcastedOn'] >= after_date
       end
     end
 
@@ -23,8 +25,15 @@ class ArdFetcher
       url = media_source_url(id)
       return if url.nil?
 
+      downloaded = 0.0
+
       get(url, stream_body: true) do |fragment|
-        block.call(fragment) if fragment.code < 300
+        next if fragment.code >= 300
+
+        downloaded += fragment.length
+        progress = downloaded / fragment.http_response.content_length
+
+        block.call(fragment, progress)
       end
     end
 
