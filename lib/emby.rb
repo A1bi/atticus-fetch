@@ -15,9 +15,12 @@ class Emby
 
       date_string = I18n.l(date, format: '%-d. %B %Y')
       episode_path = "#{season_path}/#{date_string}.mp4"
+
       File.open(episode_path, 'w') do |file|
         block.call(file)
       end
+
+      episode_path
     end
 
     def refresh_library(item_id)

@@ -8,7 +8,7 @@ class ArdFetcher
   base_uri 'https://api.ardmediathek.de/page-gateway'
 
   class << self
-    def search_for_episodes(query, after_date: nil, min_duration: nil)
+    def search_for_episodes(query, min_duration: nil)
       response = get_json('/widgets/ard/search/vod',
                           searchString: query, pageSize: 50)
       return unless response.success?
@@ -17,7 +17,7 @@ class ArdFetcher
         next if min_duration && teaser['duration'] < min_duration
 
         teaser['broadcastedOn'] = Time.parse(teaser['broadcastedOn'])
-        !after_date || teaser['broadcastedOn'] >= after_date
+        true
       end
     end
 
