@@ -13,7 +13,7 @@ I18n.locale = :de
 logger = Logger.new($stdout)
 episode_store = EpisodeStore.new
 
-episodes = ArdFetcher.search_for_episodes('gefragt gejagt', min_duration: 1200)
+episodes = ArdFetcher.search_for_episodes(ENV['ARD_QUERY'], min_duration: 1200)
 if episodes.nil?
   logger.fatal('New episodes could not be fetched.')
   exit 0
@@ -38,6 +38,7 @@ episodes.map do |episode|
 
       printf "\rDownloaded #{(progress * 100).floor} %%..."
     end
+    printf "\n"
   end
 
   episode_store.update(episode['id'], path: path, title: episode['shortTitle'])
