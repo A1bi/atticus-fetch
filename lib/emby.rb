@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'httparty'
 require 'i18n'
 
@@ -9,9 +10,9 @@ class Emby
   base_uri "#{ENV['EMBY_BASE_URL']}/emby"
 
   class << self
-    def store_episode(base_path:, date:, &block)
-      season_path = "#{base_path}/#{date.year}"
-      Dir.mkdir(season_path) unless Dir.exist?(season_path)
+    def store_episode(show:, date:, &block)
+      season_path = "#{ENV['EMBY_BASE_PATH']}/#{show}/#{date.year}"
+      FileUtils.mkdir_p(season_path)
 
       date_string = I18n.l(date, format: '%-d. %B %Y')
       episode_path = "#{season_path}/#{date_string}.mp4"

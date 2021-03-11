@@ -31,7 +31,7 @@ episodes.map do |episode|
 
   logger.info("Downloading new episode '#{episode['shortTitle']}'...")
 
-  path = Emby.store_episode(base_path: '.',
+  path = Emby.store_episode(show: episode['show']['title'],
                             date: episode['broadcastedOn']) do |file|
     ArdFetcher.download_episode(episode['id']) do |fragment, progress|
       file.write(fragment)
